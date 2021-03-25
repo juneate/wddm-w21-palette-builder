@@ -1,9 +1,11 @@
-import React, {useState} from 'react'
+import React, {useState, useContext} from 'react'
 import 'css/Swatch.css'
+import { ColourContext } from 'components/Context'
 import Channel from 'components/Channel'
 
-const Swatch = ({swatchId, red = 0, green = 0, blue = 0, onUpdateSwatch}) => {
+const Swatch = ({swatchId, red = 0, green = 0, blue = 0}) => {
 
+  const onUpdateSwatch = useContext(ColourContext).onUpdateSwatch
 
   const [r, setR] = useState(red)
   const [g, setG] = useState(green)

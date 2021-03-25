@@ -1,10 +1,13 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import 'css/Palette.css'
+import { ColourContext } from 'components/Context'
 import Swatch from 'components/Swatch'
 
-const Palette = ({colourPalette, onUpdateSwatch}) => {
+const Palette = () => {
 
-  const swatches = colourPalette.map(({ id, rgb }) => <Swatch key={id} swatchId={id} red={rgb.r} green={rgb.g} blue={rgb.b} onUpdateSwatch={onUpdateSwatch} />)
+  const colourPalette = useContext(ColourContext).palette // Consumer
+
+  const swatches = colourPalette.map(({ id, rgb }) => <Swatch key={id} swatchId={id} red={rgb.r} green={rgb.g} blue={rgb.b} />)
 
   return (
     <ul className="palette">

@@ -1,10 +1,12 @@
 import React from 'react'
 import 'css/App.css'
+import {ColourContext} from 'components/Context'
 import Palette from 'components/Palette'
 
 const App = () => {
 
 	console.log(`🔃 App`)
+
 
 	const getPaletteData = () => {
 		// Go to the database and grab a dataset and return it
@@ -45,9 +47,11 @@ const App = () => {
 	
 
 	return (
-		<main id="app" className="app">
-			<Palette colourPalette={palette} onUpdateSwatch={updatePaletteData} />
-		</main>
+		<ColourContext.Provider value={{ palette: palette, onUpdateSwatch: updatePaletteData}}>
+			<main id="app" className="app">
+				<Palette />
+			</main>
+		</ColourContext.Provider>
 	)
 }
 
