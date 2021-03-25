@@ -2,7 +2,8 @@ import React, {useState} from 'react'
 import 'css/Swatch.css'
 import Channel from 'components/Channel'
 
-const Swatch = ({red=0, green=0, blue=0}) => {
+const Swatch = ({swatchId, red = 0, green = 0, blue = 0, onUpdateSwatch}) => {
+
 
   const [r, setR] = useState(red)
   const [g, setG] = useState(green)
@@ -11,6 +12,9 @@ const Swatch = ({red=0, green=0, blue=0}) => {
   const bgColor = { 
     backgroundColor: `rgb(${r}, ${g}, ${b})`
   }
+
+  console.log(`🔃 Swatch: rgb(${r}, ${g}, ${b})`)
+  onUpdateSwatch(swatchId, { r: r, g: g, b: b })
 
   return (
     <li className="swatch" style={bgColor}>

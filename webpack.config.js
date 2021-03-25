@@ -34,6 +34,12 @@ module.exports = {
 		}
 	},
 	devServer: {
-		port: 3000
+		port: 3003,
+		historyApiFallback: {
+			index: `index.html`
+		}
+	},
+	output: {
+		publicPath: `/`
 	}
 }
