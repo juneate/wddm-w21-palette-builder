@@ -8,15 +8,20 @@ const App = () => {
 	const [palette, setPalette] = useState([])
 	const [loading, setLoading] = useState(true)
 
-	useEffect(() => {
-		getPaletteData()
+	useEffect(async () => {
+
+		let paletteData = await getApiData(`src/data/palettes.json`)
+
+		setPalette(paletteData)
+		setLoading(false)
 	}, [])
 
-	const getPaletteData = async () => {
-		let response = await fetch('src/data/palettes.json')
-		let data = await response.json()
-		setPalette(data)
-		setLoading(false)
+
+	const getApiData = async (url) => {
+		// Go into a loading state
+		setLoading(true)
+		let response = await fetch(url)
+		return await response.json()
 	}
 
 	const updatePaletteData = (whichSwatch, whatColor) => {
@@ -27,13 +32,12 @@ const App = () => {
 		theUpdatedData.find((s) => s.id === whichSwatch).rgb = {...whatColor}
 
 		// Recall the entire dataset from the database and update "palette" (fake)
-		palette = [...theUpdatedData]
+		setPalette([...theUpdatedData])
 		// setPalette([...theUpdatedData])
 
 		console.log(`updatePaletteData(${JSON.stringify(palette)})`)
 		return true
 	}
-
 
 	return (
 		<>
