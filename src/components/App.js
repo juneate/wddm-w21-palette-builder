@@ -1,32 +1,22 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import 'css/App.css'
 import {ColourContext} from 'components/Context'
 import Palette from 'components/Palette'
 
 const App = () => {
 
-	console.log(`🔃 App`)
+	const [palette, setPalette] = useState([])
+	const [loading, setLoading] = useState(true)
 
+	useEffect(() => {
+		getPaletteData()
+	}, [])
 
-	const getPaletteData = () => {
-		// Go to the database and grab a dataset and return it
-
-		// Pretend this data was returned async
-		return [
-			{
-				id: 1,
-				rgb: { r: 255, g: 0, b: 255 }
-			}, {
-				id: 2,
-				rgb: { r: 0, g: 255, b: 0 }
-			}, {
-				id: 3,
-				rgb: { r: 0, g: 255, b: 255 }
-			}, {
-				id: 4,
-				rgb: { r: 255, g: 255, b: 0 }
-			}
-		]
+	const getPaletteData = async () => {
+		let response = await fetch('src/data/palettes.json')
+		let data = await response.json()
+		setPalette(data)
+		setLoading(false)
 	}
 
 	const updatePaletteData = (whichSwatch, whatColor) => {
@@ -44,17 +34,21 @@ const App = () => {
 		return true
 	}
 
-	// Go get some data from the database
-	let palette = getPaletteData()
-	// let [palette, setPalette] = useState(getPaletteData())
-	
 
 	return (
-		<ColourContext.Provider value={{ palette: palette, onUpdateSwatch: updatePaletteData}}>
-			<main id="app" className="app">
-				<Palette />
-			</main>
-		</ColourContext.Provider>
+		<>
+			{
+				(loading)
+				?
+					<h1>Loading...</h1>
+				:
+					<ColourContext.Provider value={{ palette: palette, onUpdateSwatch: updatePaletteData}}>
+						<main id="app" className="app">
+							<Palette />
+						</main>
+					</ColourContext.Provider>
+			}
+		</>
 	)
 }
 
