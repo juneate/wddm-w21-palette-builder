@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import 'css/App.css'
 import {ColourContext} from 'components/Context'
 import Palette from 'components/Palette'
@@ -38,12 +38,15 @@ const App = () => {
 
 		// Recall the entire dataset from the database and update "palette" (fake)
 		palette = [...theUpdatedData]
+		// setPalette([...theUpdatedData])
 
-		console.log(palette)
+		console.log(`updatePaletteData(${JSON.stringify(palette)})`)
+		return true
 	}
 
-
+	// Go get some data from the database
 	let palette = getPaletteData()
+	// let [palette, setPalette] = useState(getPaletteData())
 	
 
 	return (
