@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react'
+import firebase from 'util/firebase'
 import 'css/App.css'
 import {ColourContext} from 'components/Context'
 import Palette from 'components/Palette'
@@ -8,21 +9,38 @@ const App = () => {
 	const [palette, setPalette] = useState([])
 	const [loading, setLoading] = useState(true)
 
-	useEffect(async () => {
+	useEffect(() => {
+		const db = firebase.firestore()
 
-		let paletteData = await getApiData(`src/data/palettes.json`)
+		db.collection(`palettes`).get().then(
+			(snapshot) => {
 
-		setPalette(paletteData)
-		setLoading(false)
+				// const paletteData = [] // An empty array
+				// snapshot.docs.forEach(doc => {
+				// 	const record = doc.data() // Object
+				// 	paletteData.push(record) // Push the object onto the end of the Array
+				// })
+				// setPalette(paletteData)
+
+				// Update the state (re-render)
+				setPalette(snapshot.docs.reduce((palettes, doc) => [...palettes, doc.data()], []))
+				setLoading(false)
+			}
+		)
 	}, [])
 
+	/* To use async/await, try this instead...
+	useEffect(async () => {
+		const paletteData = await getCollectionData(`palettes`)
+		
+		setPalette(paletteData.docs.reduce((palettes, doc) => [...palettes, doc.data()], []))
+		setLoading(false)
 
-	const getApiData = async (url) => {
-		// Go into a loading state
-		setLoading(true)
-		let response = await fetch(url)
-		return await response.json()
+	}, [])
+	const getCollectionData = async (collection) => {
+		return await firebase.firestore().collection(collection).get()
 	}
+	*/
 
 	const updatePaletteData = (whichSwatch, whatColor) => {
 		// Update the data in the database (faking it for now)
