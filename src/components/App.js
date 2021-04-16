@@ -8,10 +8,9 @@ const App = () => {
 
 	const [palette, setPalette] = useState([])
 	const [loading, setLoading] = useState(true)
+	const db = firebase.firestore()
 
 	useEffect(() => {
-		const db = firebase.firestore()
-
 		db.collection(`palettes`).get().then(
 			(snapshot) => {
 
@@ -23,7 +22,7 @@ const App = () => {
 				// setPalette(paletteData)
 
 				// Update the state (re-render)
-				setPalette(snapshot.docs.reduce((palettes, doc) => [...palettes, doc.data()], []))
+				setPalette(snapshot.docs.reduce((palettes, doc) => [...palettes, {id: doc.id, ...doc.data()}], []))
 				setLoading(false)
 			}
 		)
@@ -47,11 +46,11 @@ const App = () => {
 
 		// Send this update to the database (fake)
 		let theUpdatedData = [...palette]  // Duplicate the data (don't mutate data!)
-		theUpdatedData.find((s) => s.id === whichSwatch).rgb = {...whatColor}
 
-		// Recall the entire dataset from the database and update "palette" (fake)
-		setPalette([...theUpdatedData])
-		// setPalette([...theUpdatedData])
+		let recordToUpdate = theUpdatedData.find((s) => s.id === whichSwatch)
+		recordToUpdate.rgb = { ...whatColor }
+
+		db.collection(`palettes`).doc(whichSwatch.toString()).set({rgb:recordToUpdate.rgb})
 
 		console.log(`updatePaletteData(${JSON.stringify(palette)})`)
 		return true
